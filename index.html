@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Математикалық марафон — 8-сынып алгебра</title>
+<style>
+:root{--pu:#7c3aed;--cy:#22b8e8;--ye:#facc15;--pk:#ec4899;--gr:#86efac;--ink:#2b1a4d;--bg1:#f3ecff;--bg2:#e0f7ff}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:"Times New Roman",Tinos,"Liberation Serif",serif;color:var(--ink);background:linear-gradient(135deg,var(--bg1),var(--bg2) 55%,#fff7d6);padding:14px}
+.wrap{max-width:900px;margin:0 auto}
+h1{margin:4px 0;text-align:center;font-size:clamp(26px,6vw,44px);color:var(--pu)}
+.sub{text-align:center;margin:0 0 14px;font-size:clamp(15px,3.5vw,19px)}
+.score{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.team{border-radius:16px;padding:10px 6px;text-align:center;color:#fff;box-shadow:0 4px 0 rgba(0,0,0,.15)}
+.team b{display:block;font-size:clamp(14px,3.6vw,20px)}.team span{font-size:clamp(28px,8vw,46px);font-weight:bold}
+.t1{background:var(--pu)}.t2{background:var(--cy)}.t3{background:var(--pk)}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(8px,2vw,16px)}
+.cell{aspect-ratio:1;border:0;border-radius:18px;font:bold clamp(28px,8vw,56px) "Times New Roman",Tinos,serif;color:var(--ink);cursor:pointer;position:relative;box-shadow:0 5px 0 rgba(0,0,0,.18);transition:transform .15s}
+.cell:hover{transform:translateY(-3px)}.cell:focus-visible,button:focus-visible,input:focus-visible{outline:4px solid var(--ink);outline-offset:2px}
+.cell:nth-child(4n+1){background:var(--ye)}.cell:nth-child(4n+2){background:#8fe3ff}.cell:nth-child(4n+3){background:#ffb3da}.cell:nth-child(4n){background:#c9b0ff}
+.cell.done{background:var(--gr)!important;opacity:.85;cursor:default;transform:none}
+.cell small{position:absolute;bottom:4px;left:0;right:0;font-size:clamp(10px,2.6vw,15px)}
+.reset{display:block;margin:18px auto 0;padding:10px 22px;border:2px solid var(--pu);background:#fff;color:var(--pu);border-radius:999px;font:bold 17px "Times New Roman",Tinos,serif;cursor:pointer}
+.ov{position:fixed;inset:0;background:rgba(43,26,77,.6);display:none;align-items:flex-start;justify-content:center;overflow:auto;padding:12px;z-index:5}
+.ov.on{display:flex}
+.modal{background:#fff;border-radius:22px;max-width:640px;width:100%;margin:auto;padding:18px;border-top:10px solid var(--pu)}
+.modal h2{margin:0 0 6px;color:var(--pu);font-size:24px}.topic{display:inline-block;background:var(--ye);border-radius:99px;padding:2px 12px;font-size:15px;margin-bottom:8px}
+.q{font-size:clamp(20px,5vw,26px);background:var(--bg1);border-radius:14px;padding:12px;margin:8px 0}
+.hint{font-size:15px;margin:6px 0}
+input[type=text]{width:100%;font:22px "Times New Roman",Tinos,serif;padding:10px;border:3px solid var(--cy);border-radius:12px}
+.btn{border:0;border-radius:12px;padding:12px 20px;font:bold 19px "Times New Roman",Tinos,serif;cursor:pointer;color:#fff;background:var(--pu);margin-top:10px}
+.btn.x{background:#fff;color:var(--ink);border:2px solid var(--ink)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.msg{font-size:26px;font-weight:bold;margin:12px 0 4px}.ok{color:#15803d}.bad{color:#dc2626}
+.sol{background:#f0fff4;border-left:6px solid var(--gr);border-radius:10px;padding:8px 12px;font-size:19px}
+.sol p{margin:6px 0}.fin{background:var(--ye);border-radius:10px;padding:8px 12px;font-size:21px;font-weight:bold;margin-top:8px}
+.pick{margin-top:12px}.pick h3{margin:0 0 6px;font-size:19px}.pick .row{display:flex;gap:8px;flex-wrap:wrap}.pick .btn{flex:1;min-width:110px;margin:0}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.85em;line-height:1.1;margin:0 2px}.fr i{font-style:normal;border-bottom:2px solid currentColor;padding:0 3px}
+.rt{white-space:nowrap}.rt span{border-top:2px solid currentColor;padding:0 2px}
+#end{background:radial-gradient(circle,rgba(124,58,237,.9),rgba(43,26,77,.95));flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff}
+#end.on{display:flex}#end canvas{position:fixed;inset:0;pointer-events:none}
+#end h2{font-size:clamp(34px,9vw,64px);margin:0;position:relative}
+#cup{font-size:clamp(90px,26vw,190px);animation:b 1.2s ease-in-out infinite;position:relative}
+#win{font-size:clamp(36px,11vw,84px);font-weight:bold;color:var(--ye);text-shadow:0 4px 0 var(--pk);position:relative;margin:6px 0}
+#end .btn{position:relative;background:var(--ye);color:var(--ink)}
+@keyframes b{50%{transform:translateY(-14px) rotate(4deg)}}
+@media(prefers-reduced-motion:reduce){#cup{animation:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>🧮 Математикалық марафон</h1>
+<p class="sub">8-сынып · Алгебра · Толымсыз квадрат теңдеу</p>
+<div class="score" id="score"></div>
+<div class="grid" id="grid"></div>
+<button class="reset" id="reset">Ойынды қайта бастау</button>
+</div>
+
+<div class="ov" id="mo"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="mt">
+<h2 id="mt"></h2><div class="topic" id="tp"></div>
+<div class="q" id="qq"></div>
+<label for="ans" class="hint" id="hint"></label>
+<input type="text" id="ans" autocomplete="off" inputmode="text">
+<button class="btn" id="chk">Жауапты тексеру</button>
+<button class="btn x" id="cls">Жабу</button>
+<div id="res"></div>
+<div class="pick" id="pick" hidden><h3>Қай команда жауап берді? (мұғалім таңдайды)</h3>
+<div class="row"><button class="btn t1" data-t="0">1-команда</button><button class="btn t2" data-t="1">2-команда</button><button class="btn t3" data-t="2">3-команда</button></div></div>
+</div></div>
+
+<div class="ov" id="end"><canvas id="cv"></canvas>
+<h2>🎉 Ойын аяқталды! 🎉</h2><div id="cup">🏆</div><div id="win"></div><div id="fs" style="font-size:24px;position:relative"></div>
+<button class="btn" id="again">Қайта ойнау</button></div>
+
+<script>
+const R=x=>`<span class="rt">√<span>${x}</span></span>`,F=(a,b)=>`<span class="fr"><i>${a}</i>${b}</span>`;
+const SQ='Квадрат түбір',EQ='Толымсыз квадрат теңдеу';
+const NUM='Жауапты санмен жазыңдар (мысалы: 5, 1,4 немесе 7/5).',ROOT='Түбірлерді нүктелі үтір арқылы жазыңдар (мысалы: 2; -3). Бөлшек түбірді 4/3 түрінде жазуға болады.';
+const P=[
+{t:EQ,n:'2.5, 1)',q:'Теңдеуді шешіңдер: x² = 64',k:'roots',a:[8,-8],h:ROOT,fa:'x₁ = 8; x₂ = −8',s:['64 > 0, сондықтан теңдеудің екі түбірі бар: x = ±'+R(64)+'.',`${R(64)} = 8, себебі 8² = 64.`,'x₁ = 8; x₂ = −8.']},
+{t:EQ,n:'2.5, 2)',q:'Теңдеуді шешіңдер: y² = 0,09',k:'roots',a:[0.3,-0.3],h:ROOT,fa:'y₁ = 0,3; y₂ = −0,3',s:['0,09 > 0, сондықтан екі түбірі бар: y = ±'+R('0,09')+'.',`${R('0,09')} = 0,3, себебі (0,3)² = 0,09.`,'y₁ = 0,3; y₂ = −0,3.']},
+{t:EQ,n:'2.5, 3)',q:'Теңдеуді шешіңдер: 3x² = 48',k:'roots',a:[4,-4],h:ROOT,fa:'x₁ = 4; x₂ = −4',s:['Теңдеудің екі жағын 3-ке бөлеміз: x² = 16.','16 > 0, сондықтан екі түбірі бар: x = ±'+R(16)+'.',`${R(16)} = 4, себебі 4² = 16.`,'x₁ = 4; x₂ = −4.']},
+{t:EQ,n:'2.5, 5)',q:'Теңдеуді шешіңдер: y² − 10 = 39',k:'roots',a:[7,-7],h:ROOT,fa:'y₁ = 7; y₂ = −7',s:['−10-ды теңдеудің оң жағына ауыстырамыз: y² = 39 + 10 = 49.','49 > 0, сондықтан екі түбірі бар: y = ±'+R(49)+'.',`${R(49)} = 7, себебі 7² = 49.`,'y₁ = 7; y₂ = −7.']},
+{t:EQ,n:'2.5, 6)',q:'Теңдеуді шешіңдер: x² + 5 = 30',k:'roots',a:[5,-5],h:ROOT,fa:'x₁ = 5; x₂ = −5',s:['5-ті теңдеудің оң жағына ауыстырамыз: x² = 30 − 5 = 25.','25 > 0, сондықтан екі түбірі бар: x = ±'+R(25)+'.',`${R(25)} = 5, себебі 5² = 25.`,'x₁ = 5; x₂ = −5.']},
+{t:EQ,n:'2.5, 7)',q:'Теңдеуді шешіңдер: 5t² − 3 = 77',k:'roots',a:[4,-4],h:ROOT,fa:'t₁ = 4; t₂ = −4',s:['−3-ті оң жаққа ауыстырамыз: 5t² = 77 + 3 = 80.','Екі жағын 5-ке бөлеміз: t² = 16.','16 > 0, сондықтан t = ±'+R(16)+' = ±4.','t₁ = 4; t₂ = −4.']},
+{t:EQ,n:'2.5, 8)',q:`Теңдеуді шешіңдер: ${F(1,2)}x² = ${F(8,9)}`,k:'roots',a:[4/3,-4/3],h:ROOT,fa:`x₁ = ${F(4,3)}; x₂ = −${F(4,3)}`,s:[`Теңдеудің екі жағын 2-ге көбейтеміз: x² = 2 · ${F(8,9)} = ${F(16,9)}.`,`${F(16,9)} > 0, сондықтан екі түбірі бар: x = ±${R(F(16,9))} = ±${F(4,3)}.`,`x₁ = ${F(4,3)}; x₂ = −${F(4,3)}.`]},
+{t:EQ,n:'2.6, 1)',q:'Теңдеудің түбірін табыңдар: 2x² − 5x = 0',k:'roots',a:[0,2.5],h:ROOT,fa:`x₁ = 0; x₂ = ${F(5,2)} = 2,5`,s:['Бұл ax² + bx = 0 түріндегі теңдеу (c = 0). Ортақ көбейткіш x-ті жақшаның алдына шығарамыз: x(2x − 5) = 0.','Көбейтінді нөлге тең болады, егер көбейткіштердің бірі нөлге тең болса: x = 0 немесе 2x − 5 = 0.',`2x − 5 = 0 ⇒ 2x = 5 ⇒ x = ${F(5,2)} = 2,5.`,'x₁ = 0; x₂ = 2,5.']},
+{t:EQ,n:'2.6, 3)',q:'Теңдеудің түбірін табыңдар: 2x − 5x² = 0',k:'roots',a:[0,0.4],h:ROOT,fa:'x₁ = 0; x₂ = 2/5 = 0,4',s:['Ортақ көбейткіш x-ті жақшаның алдына шығарамыз: x(2 − 5x) = 0.','x = 0 немесе 2 − 5x = 0.','2 − 5x = 0 ⇒ 5x = 2 ⇒ x = 2/5 = 0,4.','x₁ = 0; x₂ = 0,4.']},
+{t:EQ,n:'2.6, 4)',q:'Теңдеудің түбірін табыңдар: 4m² − 3m = 0',k:'roots',a:[0,0.75],h:ROOT,fa:`m₁ = 0; m₂ = ${F(3,4)} = 0,75`,s:['Ортақ көбейткіш m-ді жақшаның алдына шығарамыз: m(4m − 3) = 0.','m = 0 немесе 4m − 3 = 0.',`4m − 3 = 0 ⇒ 4m = 3 ⇒ m = ${F(3,4)} = 0,75.`,'m₁ = 0; m₂ = 0,75.']},
+{t:EQ,n:'2.6, 5)',q:'Теңдеудің түбірін табыңдар: y² − 2y − 8 = 2y − 8',k:'roots',a:[0,4],h:ROOT,fa:'y₁ = 0; y₂ = 4',s:['Барлық мүшелерді сол жаққа жинаймыз: y² − 2y − 8 − 2y + 8 = 0.','Ұқсас мүшелерді біріктіреміз: y² − 4y = 0.','Ортақ көбейткіш y-ті жақшаның алдына шығарамыз: y(y − 4) = 0.','y = 0 немесе y − 4 = 0 ⇒ y = 4.','y₁ = 0; y₂ = 4.']},
+{t:EQ,n:'2.6, 6)',q:'Теңдеудің түбірін табыңдар: 3u² + 7 = 6u + 7',k:'roots',a:[0,2],h:ROOT,fa:'u₁ = 0; u₂ = 2',s:['Барлық мүшелерді сол жаққа жинаймыз: 3u² + 7 − 6u − 7 = 0.','Ұқсас мүшелерді біріктіреміз: 3u² − 6u = 0.','Ортақ көбейткіш 3u-ды жақшаның алдына шығарамыз: 3u(u − 2) = 0.','u = 0 немесе u − 2 = 0 ⇒ u = 2.','u₁ = 0; u₂ = 2.']}
+];
+const NM=['1-команда','2-команда','3-команда'];
+let st,sc,cur=null,res=null;
+const $=id=>document.getElementById(id);
+function init(){st=Array(12).fill(null);sc=[0,0,0];draw();$('end').classList.remove('on')}
+function draw(){
+ $('score').innerHTML=NM.map((n,i)=>`<div class="team t${i+1}"><b>${n}</b><span>${sc[i]}</span></div>`).join('');
+ $('grid').innerHTML=st.map((v,i)=>`<button class="cell${v===null?'':' done'}" data-i="${i}" ${v===null?'':'aria-disabled="true"'} aria-label="Есеп ${i+1}">${i+1}${v===null?'':`<small>✓ ${v.t+1}-команда</small>`}</button>`).join('');
+}
+$('grid').onclick=e=>{const b=e.target.closest('.cell');if(!b)return;const i=+b.dataset.i;if(st[i]!==null)return;open(i)};
+function open(i){
+ cur=i;res=null;const p=P[i];
+ $('mt').textContent=`${i+1}-есеп`;$('tp').textContent=`${p.t} · оқулықтағы ${p.n}`;
+ $('qq').innerHTML=p.q;$('hint').textContent=p.h;
+ $('ans').value='';$('ans').disabled=false;$('chk').disabled=false;$('res').innerHTML='';$('pick').hidden=true;
+ $('mo').classList.add('on');setTimeout(()=>$('ans').focus(),50);
+}
+$('cls').onclick=()=>$('mo').classList.remove('on');
+function num(s){
+ s=s.trim().replace(/\s+/g,' ');let m;
+ if(m=s.match(/^(-?)(\d+) (\d+)\/(\d+)$/))return (m[1]?-1:1)*(+m[2]+m[3]/m[4]);
+ if(m=s.match(/^(-?\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)$/))return m[1]/m[2];
+ if(/^-?\d+(\.\d+)?$/.test(s))return parseFloat(s);
+ return NaN;
+}
+function norm(s){return s.toLowerCase().replace(/[−–—]/g,'-').replace(/(\d),(\d)/g,'$1.$2')}
+function parseRoots(s){
+ s=norm(s).replace(/[a-zа-яәіңғүұқөһ]+[\d₀-₉]*\s*=/g,'');
+ if(/жоқ|∅|empty/.test(s))return [];
+ s=s.replace(/,\s*(?=[-±])/g,';').replace(/\s+(және|и)\s+/g,';');
+ const out=[];
+ for(const t of s.split(/;|,\s*|\s+/).filter(Boolean)){
+  const pm=t.startsWith('±'),v=num(pm?t.slice(1):t);
+  if(isNaN(v))return null;out.push(v);if(pm)out.push(-v);
+ }
+ return out;
+}
+function same(a,b){const u=x=>[...new Set(x.map(v=>Math.round(v*1e6)))].sort((p,q)=>p-q);const A=u(a),B=u(b);return A.length===B.length&&A.every((v,i)=>v===B[i])}
+function judge(p,raw){
+ if(p.k==='num')return Math.abs(num(norm(raw))-p.a[0])<1e-6;
+ if(p.k==='roots'){const r=parseRoots(raw);return r!==null&&same(r,p.a)}
+ const s=norm(raw).replace(/\s+/g,'').replace(/в/g,'b').replace(/с/g,'c');
+ return (/b=0/.test(s)&&/c=0/.test(s))||/b=c=0|c=b=0/.test(s);
+}
+$('chk').onclick=()=>{
+ const raw=$('ans').value;if(!raw.trim()){$('ans').focus();$('res').innerHTML='<div class="msg bad">Алдымен жауапты енгізіңіз.</div>';return}
+ const p=P[cur];res=judge(p,raw);
+ $('ans').disabled=true;$('chk').disabled=true;
+ $('res').innerHTML=`<div class="msg ${res?'ok':'bad'}">${res?'✅ Дұрыс жауап!':'❌ Қате жауап!'}</div>
+ <div class="sol"><b>Шығарылу жолы:</b>${p.s.map((x,i)=>`<p>${i+1}-қадам. ${x}</p>`).join('')}</div>
+ <div class="fin">Дұрыс жауабы: ${p.fa}</div>`;
+ $('pick').hidden=false;$('pick').scrollIntoView({behavior:'smooth',block:'nearest'});
+};
+$('ans').onkeydown=e=>{if(e.key==='Enter')$('chk').click()};
+$('pick').onclick=e=>{
+ const b=e.target.closest('button');if(!b||st[cur]!==null||res===null)return;
+ const t=+b.dataset.t;st[cur]={t,ok:res};if(res)sc[t]++;
+ $('mo').classList.remove('on');draw();
+ if(st.every(v=>v!==null))setTimeout(finish,400);
+};
+$('reset').onclick=()=>{if(confirm('Ойынды қайта бастауға сенімдісіз бе?'))init()};
+$('again').onclick=()=>{stopFx();init()};
+let raf=0;
+function finish(){
+ const mx=Math.max(...sc),w=sc.map((v,i)=>v===mx?i:-1).filter(i=>i>=0);
+ $('win').textContent=w.length>1?'Достық жеңді!':NM[w[0]]+' жеңді!';
+ $('fs').textContent=NM.map((n,i)=>`${n}: ${sc[i]}`).join('  ·  ');
+ $('end').classList.add('on');fx();
+}
+function stopFx(){cancelAnimationFrame(raf)}
+function fx(){
+ const c=$('cv'),x=c.getContext('2d');c.width=innerWidth;c.height=innerHeight;
+ const cols=['#7c3aed','#22b8e8','#facc15','#ec4899','#86efac'],cf=[],sp=[];
+ for(let i=0;i<160;i++)cf.push({x:Math.random()*c.width,y:-Math.random()*c.height,w:6+Math.random()*8,v:2+Math.random()*3,r:Math.random()*6,c:cols[i%5]});
+ let tk=0;
+ (function loop(){
+  x.clearRect(0,0,c.width,c.height);tk++;
+  if(tk%35===1){const bx=c.width*(.15+Math.random()*.7),by=c.height*(.15+Math.random()*.4),col=cols[tk%5];for(let i=0;i<50;i++){const a=i/50*6.283,s=2+Math.random()*3;sp.push({x:bx,y:by,vx:Math.cos(a)*s,vy:Math.sin(a)*s,l:70,c:col})}}
+  sp.forEach((p,i)=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.05;p.l--;x.globalAlpha=Math.max(p.l/70,0);x.fillStyle=p.c;x.beginPath();x.arc(p.x,p.y,3,0,6.283);x.fill()});
+  for(let i=sp.length-1;i>=0;i--)if(sp[i].l<=0)sp.splice(i,1);
+  x.globalAlpha=1;
+  cf.forEach(p=>{p.y+=p.v;p.r+=.08;if(p.y>c.height){p.y=-10;p.x=Math.random()*c.width}x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.c;x.fillRect(-p.w/2,-p.w/4,p.w,p.w/2);x.restore()});
+  raf=requestAnimationFrame(loop);
+ })();
+}
+init();
+</script>
+</body>
+</html>
